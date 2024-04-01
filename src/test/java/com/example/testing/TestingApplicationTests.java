@@ -1,4 +1,4 @@
-package com.github.evgdim.testing;
+package com.example.testing;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

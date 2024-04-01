@@ -1,4 +1,4 @@
-package com.github.evgdim.testing;
+package com.example.testing;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
