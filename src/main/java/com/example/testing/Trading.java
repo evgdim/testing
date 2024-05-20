@@ -2,6 +2,7 @@ package com.example.testing;
 
 import java.math.BigDecimal;
 import java.util.Optional;
+import java.util.function.Function;
 
 public class Trading {
     private final String userName;
@@ -27,9 +28,8 @@ public class Trading {
         Optional<BigDecimal> exchangeBalanace = exchnage.getBalanace(symbol);
         boolean hasSufficientExchangeBalance = exchangeBalanace.isPresent() && exchangeBalanace.get().compareTo(buySymbolAmount) > 0;
         if(hasSufficientUserBalance && hasSufficientExchangeBalance) {
-            BigDecimal balanceAfterTrade = wallet.getUserBalance(Symbol.USD).subtract(amountPrice);
-            wallet.setUserBalance(Symbol.USD, balanceAfterTrade);
-            wallet.setUserBalance(symbol, buySymbolAmount);
+            wallet.updateUserBalance(Symbol.USD, currentBalance -> currentBalance.subtract(amountPrice));
+            wallet.updateUserBalance(symbol, currentBalance -> currentBalance.add(buySymbolAmount));
             return new Trade(TradeStatus.SUCCESS, amountPrice, symbol, null);
         } else {
             if(!hasSufficientUserBalance) return new Trade(TradeStatus.FAILED, amountPrice, symbol, "Insufficient user balance");

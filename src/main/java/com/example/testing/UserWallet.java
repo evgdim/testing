@@ -3,6 +3,7 @@ package com.example.testing;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
 
 public class UserWallet {
     private final Map<Symbol, BigDecimal> balances;
@@ -18,7 +19,10 @@ public class UserWallet {
         } else return BigDecimal.ZERO;
     }
 
-    public void setUserBalance(Symbol symbol, BigDecimal amount) {
-        balances.put(symbol, amount);
+    public void updateUserBalance(Symbol symbol, Function<BigDecimal, BigDecimal> updateBalance) {
+        var currentBalance = balances.get(symbol);
+        if(currentBalance == null) currentBalance = BigDecimal.ZERO;
+        var newBalance = updateBalance.apply(currentBalance);
+        balances.put(symbol, newBalance);
     }
 }
