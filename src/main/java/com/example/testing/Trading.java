@@ -1,16 +1,18 @@
 package com.example.testing;
 
 import java.math.BigDecimal;
-import java.util.Map;
+import java.util.Optional;
 
 public class Trading {
     private final String userName;
     private final UserWallet wallet;
     private final ExchangeRate exchangeRate;
-    public Trading(String userName, UserWallet wallet, ExchangeRate exchangeRate) {
+    private final Exchange exchnage;
+    public Trading(String userName, UserWallet wallet, ExchangeRate exchangeRate, Exchange exchnage) {
         this.userName = userName;
         this.wallet = wallet;
         this.exchangeRate = exchangeRate;
+        this.exchnage = exchnage;
     }
 
     public Trade buy(Symbol symbol, int amount) {
@@ -21,13 +23,18 @@ public class Trading {
         var amountPrice = priceForOneUnit.multiply(buySymbolAmount);
 
         BigDecimal usdBalance = wallet.getUserBalance(Symbol.USD);
-        if(usdBalance.compareTo(amountPrice) >= 0 ) {
+        boolean hasSufficientUserBalance = usdBalance.compareTo(amountPrice) >= 0;
+        Optional<BigDecimal> exchangeBalanace = exchnage.getBalanace(symbol);
+        boolean hasSufficientExchangeBalance = exchangeBalanace.isPresent() && exchangeBalanace.get().compareTo(buySymbolAmount) > 0;
+        if(hasSufficientUserBalance && hasSufficientExchangeBalance) {
             BigDecimal balanceAfterTrade = wallet.getUserBalance(Symbol.USD).subtract(amountPrice);
             wallet.setUserBalance(Symbol.USD, balanceAfterTrade);
             wallet.setUserBalance(symbol, buySymbolAmount);
             return new Trade(TradeStatus.SUCCESS, amountPrice, symbol, null);
         } else {
-            return new Trade(TradeStatus.FAILED, amountPrice, symbol, "Insufficient amount");
+            if(!hasSufficientUserBalance) return new Trade(TradeStatus.FAILED, amountPrice, symbol, "Insufficient user balance");
+            if(!hasSufficientExchangeBalance) return new Trade(TradeStatus.FAILED, amountPrice, symbol, "Insufficient exchange balance");
+            throw new RuntimeException("All conditions met, bu trade failed");
         }
     }
 

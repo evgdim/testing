@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import static com.example.testing.Symbol.BTC;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -17,12 +18,14 @@ public class TradingClassTest {
     public void testSuccessBuy() {
         UserWallet wallet = new UserWallet(Map.of(Symbol.USD, new BigDecimal(1000)));
         ExchangeRate exchangeRate = mock(ExchangeRate.class);
-        Trading trading = new Trading("user-123", wallet, exchangeRate);
+        Exchange exchange = mock(Exchange.class);
+        Trading trading = new Trading("user-123", wallet, exchangeRate, exchange);
 
         Assertions.assertThat(wallet.getUserBalance(Symbol.USD)).isEqualTo(new BigDecimal(1000));
         Assertions.assertThat(wallet.getUserBalance(Symbol.BTC)).isEqualTo(BigDecimal.ZERO);
 
         when(exchangeRate.getExchangeRate(BTC)).thenReturn(new BigDecimal(900));
+        when(exchange.getBalanace(any())).thenReturn(Optional.of(new BigDecimal(10)));
         Trade trade = trading.buy(BTC, 1);
 
         Assertions.assertThat(trade.getStatus()).isEqualTo(TradeStatus.SUCCESS);
@@ -34,13 +37,15 @@ public class TradingClassTest {
     public void testFailedBuy() {
         UserWallet wallet = new UserWallet(Map.of(Symbol.USD, new BigDecimal(1000)));
         ExchangeRate exchangeRate = mock(ExchangeRate.class);
-        Trading trading = new Trading("user-123", wallet, exchangeRate);
+        Exchange exchange = mock(Exchange.class);
+        Trading trading = new Trading("user-123", wallet, exchangeRate, exchange);
 
         when(exchangeRate.getExchangeRate(BTC)).thenReturn(new BigDecimal(900));
+        when(exchange.getBalanace(any())).thenReturn(Optional.of(new BigDecimal(10)));
         Trade trade = trading.buy(BTC, 2);
 
         Assertions.assertThat(trade.getStatus()).isEqualTo(TradeStatus.FAILED);
-        Assertions.assertThat(trade.getMessage()).isEqualTo(Optional.of("Insufficient amount"));
+        Assertions.assertThat(trade.getMessage()).isEqualTo(Optional.of("Insufficient user balance"));
         Assertions.assertThat(wallet.getUserBalance(Symbol.USD)).isEqualTo(new BigDecimal(1000));
         Assertions.assertThat(wallet.getUserBalance(Symbol.BTC)).isEqualTo(BigDecimal.ZERO);
     }
@@ -50,7 +55,9 @@ public class TradingClassTest {
         UserWallet wallet = new UserWallet(Map.of(Symbol.USD, new BigDecimal(1000)));
         ExchangeRate exchangeRate = mock(ExchangeRate.class);
         when(exchangeRate.getExchangeRate(BTC)).thenReturn(new BigDecimal(900));
-        Trading trading = new Trading("user-123", wallet, exchangeRate);
+        Exchange exchange = mock(Exchange.class);
+        when(exchange.getBalanace(any())).thenReturn(Optional.of(new BigDecimal(10)));
+        Trading trading = new Trading("user-123", wallet, exchangeRate, exchange);
 
         Trade trade1 = trading.buy(BTC, 0);
 
@@ -60,5 +67,20 @@ public class TradingClassTest {
         Trade trade2 = trading.buy(BTC, -1);
         Assertions.assertThat(trade2.getStatus()).isEqualTo(TradeStatus.FAILED);
         Assertions.assertThat(trade2.getMessage().get()).isEqualTo("Invalid quantity");
+    }
+
+    @Test
+    public void testExchnageInsufficientFunds() {
+        UserWallet wallet = new UserWallet(Map.of(Symbol.USD, new BigDecimal(999999999999999999L)));
+        ExchangeRate exchangeRate = mock(ExchangeRate.class);
+        when(exchangeRate.getExchangeRate(BTC)).thenReturn(new BigDecimal(900));
+        Exchange exchange = mock(Exchange.class);
+
+        Trading trading = new Trading("user-123", wallet, exchangeRate, exchange);
+        when(exchange.getBalanace(any())).thenReturn(Optional.of(new BigDecimal(10)));
+
+        Trade trade = trading.buy(BTC, 1000);
+        Assertions.assertThat(trade.getStatus()).isEqualTo(TradeStatus.FAILED);
+        Assertions.assertThat(trade.getMessage()).isEqualTo(Optional.of("Insufficient exchange balance"));
     }
 }
