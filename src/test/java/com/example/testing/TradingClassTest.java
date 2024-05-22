@@ -23,7 +23,7 @@ public class TradingClassTest {
         wallet = new UserWallet(Map.of(Symbol.USD, startingUserBalance));
         exchangeRateMock = mock(ExchangeRate.class);
         exchangeMock = mock(Exchange.class);
-        trading = new Trading("user-123", wallet, exchangeRateMock, exchangeMock);
+        trading = new Trading(wallet, exchangeRateMock, exchangeMock);
     }
     @Test
     public void testSuccessBuy() {
