@@ -18,14 +18,18 @@ public class KrakenClient<T> {
     private final String pair; //XBT/USD
     private final Function<String, T> responseMapper;
 
+    public KrakenClient() {
+        this("wss://ws.kraken.com/", "XBT/USD", s -> (T)s);
+    }
+
     public KrakenClient(String baseUrl, String pair, Function<String, T> responseMapper) {
         this.baseUrl = baseUrl;
         this.pair = pair;
         this.responseMapper = responseMapper;
     }
 
-    public Flux<String> orderBookUpdates() {
-        Flux<String> flux = Flux.create(fluxSink -> {
+    public Flux<T> orderBookUpdates() {
+        Flux<T> flux = Flux.create(fluxSink -> {
             try {
                 listenOrderBookUpdates(s -> fluxSink.next(s));
             } catch (InterruptedException | ExecutionException e) {
@@ -36,7 +40,7 @@ public class KrakenClient<T> {
         return flux;
     }
 
-    public void listenOrderBookUpdates(Consumer<String> onBookUpdate) throws InterruptedException, ExecutionException {
+    public void listenOrderBookUpdates(Consumer<T> onBookUpdate) throws InterruptedException, ExecutionException {
 
         WebSocketUpgradeHandler handler = new WebSocketUpgradeHandler.Builder().addWebSocketListener(new WebSocketListener() {
             @Override
@@ -49,7 +53,8 @@ public class KrakenClient<T> {
 
             @Override
             public void onTextFrame(String payload, boolean finalFragment, int rsv) {
-                onBookUpdate.accept(payload);
+                var mappedResponse = responseMapper.apply(payload);
+                onBookUpdate.accept(mappedResponse);
             }
 
             @Override
@@ -65,7 +70,7 @@ public class KrakenClient<T> {
         ListenableFuture<NettyWebSocket> request = Dsl.asyncHttpClient()
                 .prepareGet(baseUrl)
                 .execute(handler);
-            request.get();
+        request.get();
     }
 
 }

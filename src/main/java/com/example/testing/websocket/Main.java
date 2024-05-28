@@ -6,12 +6,7 @@ import java.util.function.Consumer;
 public class Main {
     public static void main(String[] args) throws ExecutionException, InterruptedException {
         KrakenClient client = new KrakenClient("wss://ws.kraken.com/", "XBT/USD", s -> s);
-        client.orderBookUpdates().subscribe(new Consumer() {
-            @Override
-            public void accept(Object o) {
-                System.out.println("from flux:" + o);
-            }
-        });
+        client.orderBookUpdates().subscribe(o -> System.out.println("from flux:" + o));
 
         Thread.sleep(999999999999L);
     }
