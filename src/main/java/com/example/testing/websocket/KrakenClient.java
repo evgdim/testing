@@ -1,7 +1,7 @@
 package com.example.testing.websocket;
 
 import com.example.testing.websocket.model.OrderBookUpdate;
-import com.example.testing.websocket.model.OrderBookUpdateItem;
+import com.example.testing.websocket.model.OrderBookItem;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -80,30 +80,30 @@ public class KrakenClient<T> {
         request.get();
     }
 
-    static class ResponseMapper {
-        private static ObjectMapper jackson = new ObjectMapper();
-        private static List<OrderBookUpdateItem> mapItems(ArrayNode itemsNode) {
-            if(itemsNode == null) return List.of();
-            List<OrderBookUpdateItem> items = new ArrayList<>();
-            for (int i = 0; i < itemsNode.size(); i++) {
-                JsonNode itemNode = itemsNode.get(i);
-                var obui =new OrderBookUpdateItem(itemNode.get(0).decimalValue(), itemNode.get(1).decimalValue(), itemNode.get(2).decimalValue());
-                items.add(obui);
-            }
-            return items;
-        }
-
-        public static Optional<OrderBookUpdate> mapResponse(String s) {
-            try {
-                JsonNode jsonNode = jackson.readValue(s, JsonNode.class);
-                if(jsonNode.isArray()) {
-                    OrderBookUpdate orderBookUpdate = jackson.readValue(s, OrderBookUpdate.class);
-                    return Optional.of(orderBookUpdate);
-                }
-                return Optional.empty();
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
+//    static class ResponseMapper {
+//        private static ObjectMapper jackson = new ObjectMapper();
+//        private static List<OrderBookItem> mapItems(ArrayNode itemsNode) {
+//            if(itemsNode == null) return List.of();
+//            List<OrderBookItem> items = new ArrayList<>();
+//            for (int i = 0; i < itemsNode.size(); i++) {
+//                JsonNode itemNode = itemsNode.get(i);
+//                var obui =new OrderBookItem(itemNode.get(0).decimalValue(), itemNode.get(1).decimalValue(), itemNode.get(2).decimalValue());
+//                items.add(obui);
+//            }
+//            return items;
+//        }
+//
+//        public static Optional<OrderBookUpdate> mapResponse(String s) {
+//            try {
+//                JsonNode jsonNode = jackson.readValue(s, JsonNode.class);
+//                if(jsonNode.isArray()) {
+//                    OrderBookUpdate orderBookUpdate = jackson.readValue(s, OrderBookUpdate.class);
+//                    return Optional.of(orderBookUpdate);
+//                }
+//                return Optional.empty();
+//            } catch (Exception e) {
+//                throw new RuntimeException(e);
+//            }
+//        }
+//    }
 }

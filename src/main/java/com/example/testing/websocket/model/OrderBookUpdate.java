@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Map;
 
 public class OrderBookUpdate {
-    private final List<OrderBookUpdateItem> bids;
-    private final List<OrderBookUpdateItem> asks;
+    private final List<OrderBookItem> bids;
+    private final List<OrderBookItem> asks;
     private final String channelName;
     private final String pair;
     private final Long checksum;
@@ -30,13 +30,20 @@ public class OrderBookUpdate {
         this.pair = (String) items.get(3);
     }
 
-    private static List<OrderBookUpdateItem> mapItems(ArrayList<ArrayList<String>> items) {
+    private static List<OrderBookItem> mapItems(ArrayList<ArrayList<String>> items) {
         return items.stream()
-                .map(i -> new OrderBookUpdateItem(
-                                    new BigDecimal(i.get(0)),
-                                    new BigDecimal(i.get(1)),
-                                    new BigDecimal(i.get(2))
-                        )
+                .map(i -> {
+                    String priceStr = i.get(0);
+                    String volumeStr = i.get(1);
+
+                            return new OrderBookItem(
+                                                new BigDecimal(priceStr),
+                                                priceStr,
+                                                new BigDecimal(priceStr),
+                                                volumeStr,
+                                                new BigDecimal(i.get(2))
+                                    );
+                        }
                 ).toList();
     }
 
