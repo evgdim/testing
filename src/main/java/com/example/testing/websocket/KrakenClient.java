@@ -97,22 +97,8 @@ public class KrakenClient<T> {
             try {
                 JsonNode jsonNode = jackson.readValue(s, JsonNode.class);
                 if(jsonNode.isArray()) {
-                    JsonNode book = jsonNode.get(1);
-                    String channel = jsonNode.get(2).asText();
-                    String pair = jsonNode.get(3).asText();
-                    boolean isOrderBookUpdate = book.has("c");
-                    Long checksum = null;
-                    List<OrderBookUpdateItem> asks;
-                    List<OrderBookUpdateItem> bids;
-                    if(isOrderBookUpdate) {
-                        asks = mapItems((ArrayNode) book.get("a"));
-                        bids = mapItems((ArrayNode) book.get("b"));
-                        checksum = book.get("c").asLong();
-                    } else {
-                        asks = mapItems((ArrayNode) book.get("as"));
-                        bids = mapItems((ArrayNode) book.get("bs"));
-                    }
-                    return Optional.of(new OrderBookUpdate(bids, asks, channel, pair, Optional.ofNullable(checksum)));
+                    OrderBookUpdate orderBookUpdate = jackson.readValue(s, OrderBookUpdate.class);
+                    return Optional.of(orderBookUpdate);
                 }
                 return Optional.empty();
             } catch (Exception e) {
