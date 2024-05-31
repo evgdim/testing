@@ -45,13 +45,13 @@ public class OrderBookUpdate {
                 .map(i -> {
                     String priceStr = i.get(0);
                     String volumeStr = i.get(1);
-
-                            return new OrderBookItem(
+                    String timestamp = i.get(2);
+                    return new OrderBookItem(
                                                 new BigDecimal(priceStr),
                                                 priceStr,
-                                                new BigDecimal(priceStr),
+                                                new BigDecimal(volumeStr),
                                                 volumeStr,
-                                                new BigDecimal(i.get(2))
+                                                new BigDecimal(timestamp)
                                     );
                         }
                 ).toList();
