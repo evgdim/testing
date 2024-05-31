@@ -17,17 +17,27 @@ public class OrderBookUpdate {
     @JsonCreator
     public OrderBookUpdate(List<Object> items) {
         //Long id = (Long)items.get(0); not needed
-        if(items.size() > 4) this.checksum = (Long)items.get(4); else checksum = null;
+        this.checksum = getChecksum((Map<String, Object>) items.get(1));
         Map<String, ArrayList<ArrayList<String>>> asksBidsMap = (Map<String, ArrayList<ArrayList<String>>>)items.get(1);
         if(this.checksum != null) { // update
-            bids = mapItems(asksBidsMap.get("b"));
-            asks = mapItems(asksBidsMap.get("a"));
+            ArrayList<ArrayList<String>> b = asksBidsMap.get("b");
+            if(b != null) bids = mapItems(b); else bids = List.of();
+            ArrayList<ArrayList<String>> a = asksBidsMap.get("a");
+            if(a != null) asks = mapItems(a); else asks = List.of();
         } else { // full book
-            bids = mapItems(asksBidsMap.get("bs"));
-            asks = mapItems(asksBidsMap.get("as"));
+            ArrayList<ArrayList<String>> bs = asksBidsMap.get("bs");
+            if(bs != null) bids = mapItems(bs); else bids = List.of();
+            ArrayList<ArrayList<String>> as = asksBidsMap.get("as");
+            if(as != null) asks = mapItems(as); else asks = List.of();
         }
         this.channelName = (String) items.get(2);
         this.pair = (String) items.get(3);
+    }
+
+    private static Long getChecksum(Map<String, Object> items) {
+        String c = (String) items.get("c");
+        if(c == null) return null;
+        return Long.parseLong(c);
     }
 
     private static List<OrderBookItem> mapItems(ArrayList<ArrayList<String>> items) {
