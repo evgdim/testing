@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class OrderBookUpdate {
     private final List<OrderBookItem> bids;
@@ -54,7 +55,7 @@ public class OrderBookUpdate {
                                                 new BigDecimal(timestamp)
                                     );
                         }
-                ).toList();
+                ).collect(Collectors.toList());
     }
 
     public String getChannelName() {
@@ -69,9 +70,18 @@ public class OrderBookUpdate {
         return checksum;
     }
 
+    public List<OrderBookItem> getBids() {
+        return bids;
+    }
+
+    public List<OrderBookItem> getAsks() {
+        return asks;
+    }
+
+
     @Override
     public String toString() {
-        return "TestJsonCreator{" +
+        return "OrderBookUpdate{" +
                 "bids=" + bids +
                 ", asks=" + asks +
                 ", channelName='" + channelName + '\'' +
