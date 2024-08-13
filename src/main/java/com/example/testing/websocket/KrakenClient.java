@@ -60,6 +60,7 @@ public class KrakenClient<T> {
 
             @Override
             public void onTextFrame(String payload, boolean finalFragment, int rsv) {
+                System.out.println(payload);
                 var mappedResponse = responseMapper.apply(payload);
                 onBookUpdate.accept(mappedResponse);
             }

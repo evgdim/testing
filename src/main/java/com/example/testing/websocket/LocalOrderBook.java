@@ -75,7 +75,7 @@ public class LocalOrderBook {
     private String adaptForChecksumCalculation(String original) {
         String withoutDecimal = original.replace(".", "");
         var firstNot0Character = Arrays.stream(withoutDecimal.split("")).filter(s -> !s.equals("0")).findFirst();
-        if(firstNot0Character.isEmpty()) return "";
+        if(firstNot0Character.isEmpty()) return "0";
         return withoutDecimal.substring(withoutDecimal.indexOf(firstNot0Character.get()));
     }
 }
