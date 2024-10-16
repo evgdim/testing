@@ -21,7 +21,7 @@ public class KrakenClient<T> {
     private final Integer depth;
 
     public KrakenClient() {
-        this("wss://ws.kraken.com/", "XBT/USD",25, s -> (T)s);
+        this("wss://ws.kraken.com/", "XBT/USD",10, s -> (T)s);
     }
 
     public KrakenClient(String baseUrl, String pair, Integer depth, Function<String, T> responseMapper) {
@@ -37,7 +37,7 @@ public class KrakenClient<T> {
             @Override
             public void onOpen(WebSocket websocket) {
                 if(websocket.isOpen()) {
-                    websocket.sendTextFrame("{\"event\": \"subscribe\",\"pair\": [\""+pair+"\"],\"subscription\": {\"name\": \"book\", \"depth\": 25}}");
+                    websocket.sendTextFrame("{\"event\": \"subscribe\",\"pair\": [\""+pair+"\"],\"subscription\": {\"name\": \"book\", \"depth\": "+depth+"}}");
                 }
 
             }

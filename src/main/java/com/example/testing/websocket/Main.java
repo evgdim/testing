@@ -12,7 +12,7 @@ import java.util.function.Function;
 public class Main {
     public static void main(String[] args) throws ExecutionException, InterruptedException {
         Function<String, Optional<OrderBookUpdate>> mapper = s -> KrakenClient.ResponseMapper.mapResponse(s);
-        KrakenClient client = new KrakenClient("wss://ws.kraken.com/", "XBT/USD", 25, mapper); //use 25 even if we need only 10 to handle the case when volume is 0 and we have to remove entry
+        KrakenClient client = new KrakenClient("wss://ws.kraken.com/", "XBT/USD", 10, mapper); //use 25 even if we need only 10 to handle the case when volume is 0 and we have to remove entry
         LocalOrderBook lob = new LocalOrderBook();
 //        while (true) {
             try {
