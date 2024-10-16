@@ -2,6 +2,7 @@ package com.example.testing.websocket;
 
 import com.example.testing.websocket.model.OrderBookItem;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -36,7 +37,7 @@ public class LocalOrderBook {
             upsertOrderBookItems(updatedAsks, asks);
             Stream<OrderBookItem> sortedAsks = getSortedOrderBookItems(asks, reversed).limit(10);
             asksStringForChecksum = getStringForChecksum(sortedAsks);
-            asks = getSortedOrderBookItems(asks, reversed).limit(10).collect(Collectors.toList());
+            this.asks = getSortedOrderBookItems(asks, reversed).limit(10).collect(Collectors.toList());
         } else {
             asksStringForChecksum = getStringForChecksum(getSortedOrderBookItems(asks, reversed));
         }
@@ -52,7 +53,7 @@ public class LocalOrderBook {
     private void upsertOrderBookItems(List<OrderBookItem> updateItems, List<OrderBookItem> localItems) {
         updateItems.forEach(iu -> {
             localItems.removeIf(i -> i.price().compareTo(iu.price()) == 0);
-            localItems.add(iu);
+            if(iu.volume().compareTo(BigDecimal.ZERO) != 0) localItems.add(iu); //if the volume is 0 we have to remove the price level
         });
     }
 

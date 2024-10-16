@@ -41,7 +41,7 @@ public class ChecksumTests {
     }
 
     @Test
-    public void tetUpdate() {
+    public void testUpdate() {
         var asks = List.of(
                 new OrderBookItem(new BigDecimal("0.05005"),"0.05005",new BigDecimal("0.00000500"),"0.00000500", new BigDecimal("1582905487.684110")),
                 new OrderBookItem(new BigDecimal("0.05010"),"0.05010",new BigDecimal("0.00000500"),"0.00000500", new BigDecimal("1582905486.187983")),
@@ -78,7 +78,7 @@ public class ChecksumTests {
     }
 
     @Test
-    public void tetUpdate2() {
+    public void testUpdate2() {
         var asks = List.of(
                 new OrderBookItem(new BigDecimal("58226.70000"),"58226.70000",new BigDecimal("12.92016371"),"12.92016371", new BigDecimal("1582905487.684110")),
                 new OrderBookItem(new BigDecimal("58228.90000"),"58228.90000",new BigDecimal("0.16870000"), "0.16870000", new BigDecimal("1582905486.187983")),
@@ -112,6 +112,77 @@ public class ChecksumTests {
                         new OrderBookItem(new BigDecimal("58226.70000"), "58226.70000", new BigDecimal("13.08886371"), "13.08886371", new BigDecimal("1582905486.187983"))
                 ),
                 2195388083L);
+
+    }
+
+    @Test
+    public void testUpdateWith0Volume() {
+        var bids = List.of(
+                new OrderBookItem(new BigDecimal("68150.00000"), "68150.00000", new BigDecimal("0.36481843"), "0.36481843", new BigDecimal("1729078521.619943")),
+                new OrderBookItem(new BigDecimal("68146.10000"), "68146.10000", new BigDecimal("0.00375742"), "0.00375742", new BigDecimal("1729078519.068319")),
+                new OrderBookItem(new BigDecimal("68143.30000"), "68143.30000", new BigDecimal("3.66873703"), "3.66873703", new BigDecimal("1729078521.732722")),
+                new OrderBookItem(new BigDecimal("68140.30000"), "68140.30000", new BigDecimal("0.04747357"), "0.04747357", new BigDecimal("1729078521.341279")),
+                new OrderBookItem(new BigDecimal("68139.70000"), "68139.70000", new BigDecimal("0.00014684"), "0.00014684", new BigDecimal("1729078512.079461")),
+                new OrderBookItem(new BigDecimal("68139.50000"), "68139.50000", new BigDecimal("3.66893881"), "3.66893881", new BigDecimal("1729078521.732517")),
+                new OrderBookItem(new BigDecimal("68136.30000"), "68136.30000", new BigDecimal("0.00014684"), "0.00014684", new BigDecimal("1729078438.471464")),
+                new OrderBookItem(new BigDecimal("68135.50000"), "68135.50000", new BigDecimal("7.33831223"), "7.33831223", new BigDecimal("1729078516.007905")),
+                new OrderBookItem(new BigDecimal("68135.30000"), "68135.30000", new BigDecimal("0.01466984"), "0.01466984", new BigDecimal("1729078521.568741")),
+                new OrderBookItem(new BigDecimal("68133.80000"), "68133.80000", new BigDecimal("0.04454749"), "0.04454749", new BigDecimal("1729078505.706169")),
+                new OrderBookItem(new BigDecimal("68133.00000"), "68133.00000", new BigDecimal("0.32440912"), "0.32440912", new BigDecimal("1729078513.043816")),
+                new OrderBookItem(new BigDecimal("68132.90000"), "68132.90000", new BigDecimal("0.00014684"), "0.00014684", new BigDecimal("1729078519.666788")),
+                new OrderBookItem(new BigDecimal("68132.50000"), "68132.50000", new BigDecimal("0.63223838"), "0.63223838", new BigDecimal("1729078520.703249")),
+                new OrderBookItem(new BigDecimal("68129.50000"), "68129.50000", new BigDecimal("0.00014684"), "0.00014684", new BigDecimal("1729078508.818691")),
+                new OrderBookItem(new BigDecimal("68126.70000"), "68126.70000", new BigDecimal("0.03081639"), "0.03081639", new BigDecimal("1729078505.616761")),
+                new OrderBookItem(new BigDecimal("68126.60000"), "68126.60000", new BigDecimal("0.01100000"), "0.01100000", new BigDecimal("1729078465.130094")),
+                new OrderBookItem(new BigDecimal("68126.10000"), "68126.10000", new BigDecimal("0.00014684"), "0.00014684", new BigDecimal("1729078441.420744")),
+                new OrderBookItem(new BigDecimal("68123.90000"), "68123.90000", new BigDecimal("0.37120000"), "0.37120000", new BigDecimal("1729078511.518314")),
+                new OrderBookItem(new BigDecimal("68122.70000"), "68122.70000", new BigDecimal("0.43828721"), "0.43828721", new BigDecimal("1729078513.076036")),
+                new OrderBookItem(new BigDecimal("68122.60000"), "68122.60000", new BigDecimal("0.00014684"), "0.00014684", new BigDecimal("1729078260.899072")),
+                new OrderBookItem(new BigDecimal("68121.70000"), "68121.70000", new BigDecimal("7.33979689"), "7.33979689", new BigDecimal("1729078518.720585")),
+                new OrderBookItem(new BigDecimal("68121.60000"), "68121.60000", new BigDecimal("7.33981559"), "7.33981559", new BigDecimal("1729078519.540447")),
+                new OrderBookItem(new BigDecimal("68119.20000"), "68119.20000", new BigDecimal("0.00014684"), "0.00014684", new BigDecimal("1729078490.419119")),
+                new OrderBookItem(new BigDecimal("68118.90000"), "68118.90000", new BigDecimal("0.25000000"), "0.25000000", new BigDecimal("1729078513.385788")),
+                new OrderBookItem(new BigDecimal("68118.30000"), "68118.30000", new BigDecimal("0.02296543"), "0.02296543", new BigDecimal("1729078506.337320"))
+        );
+        List<OrderBookItem> asks = List.of(
+                new OrderBookItem(new BigDecimal("68150.10000"), "68150.10000", new BigDecimal("7.84449223"), "7.84449223", new BigDecimal("1729078520.864418")),
+                new OrderBookItem(new BigDecimal("68150.80000"), "68150.80000", new BigDecimal("3.66834079"), "3.66834079", new BigDecimal("1729078519.640187")),
+                new OrderBookItem(new BigDecimal("68151.60000"), "68151.60000", new BigDecimal("0.80380843"), "0.80380843", new BigDecimal("1729078515.020793")),
+                new OrderBookItem(new BigDecimal("68153.10000"), "68153.10000", new BigDecimal("3.66821462"), "3.66821462", new BigDecimal("1729078519.982236")),
+                new OrderBookItem(new BigDecimal("68155.40000"), "68155.40000", new BigDecimal("1.35222757"), "1.35222757", new BigDecimal("1729078506.386595")),
+                new OrderBookItem(new BigDecimal("68155.70000"), "68155.70000", new BigDecimal("7.33615044"), "7.33615044", new BigDecimal("1729078519.982332")),
+                new OrderBookItem(new BigDecimal("68158.80000"), "68158.80000", new BigDecimal("0.37120000"), "0.37120000", new BigDecimal("1729078513.330874")),
+                new OrderBookItem(new BigDecimal("68160.90000"), "68160.90000", new BigDecimal("0.31611919"), "0.31611919", new BigDecimal("1729078520.780048")),
+                new OrderBookItem(new BigDecimal("68165.10000"), "68165.10000", new BigDecimal("0.61589000"), "0.61589000", new BigDecimal("1729078503.502889")),
+                new OrderBookItem(new BigDecimal("68165.70000"), "68165.70000", new BigDecimal("0.37163689"), "0.37163689", new BigDecimal("1729078519.560235")),
+                new OrderBookItem(new BigDecimal("68166.30000"), "68166.30000", new BigDecimal("0.02684538"), "0.02684538", new BigDecimal("1729078511.617123")),
+                new OrderBookItem(new BigDecimal("68166.70000"), "68166.70000", new BigDecimal("7.33496351"), "7.33496351", new BigDecimal("1729078506.453450")),
+                new OrderBookItem(new BigDecimal("68168.50000"), "68168.50000", new BigDecimal("0.29290000"), "0.29290000", new BigDecimal("1729078506.954696")),
+                new OrderBookItem(new BigDecimal("68177.20000"), "68177.20000", new BigDecimal("0.37120000"), "0.37120000", new BigDecimal("1729078500.662833")),
+                new OrderBookItem(new BigDecimal("68177.60000"), "68177.60000", new BigDecimal("0.01532212"), "0.01532212", new BigDecimal("1729078520.495748")),
+                new OrderBookItem(new BigDecimal("68177.80000"), "68177.80000", new BigDecimal("0.29454749"), "0.29454749", new BigDecimal("1729078505.791362")),
+                new OrderBookItem(new BigDecimal("68178.10000"), "68178.10000", new BigDecimal("1.86402627"), "1.86402627", new BigDecimal("1729078519.859203")),
+                new OrderBookItem(new BigDecimal("68178.20000"), "68178.20000", new BigDecimal("7.33373288"), "7.33373288", new BigDecimal("1729078513.096091")),
+                new OrderBookItem(new BigDecimal("68180.00000"), "68180.00000", new BigDecimal("0.27834760"), "0.27834760", new BigDecimal("1729078506.947424")),
+                new OrderBookItem(new BigDecimal("68180.10000"), "68180.10000", new BigDecimal("0.03394000"), "0.03394000", new BigDecimal("1729078505.312906")),
+                new OrderBookItem(new BigDecimal("68182.40000"), "68182.40000", new BigDecimal("0.85328774"), "0.85328774", new BigDecimal("1729078507.124005")),
+                new OrderBookItem(new BigDecimal("68185.40000"), "68185.40000", new BigDecimal("0.00318972"), "0.00318972", new BigDecimal("1729078503.309921")),
+                new OrderBookItem(new BigDecimal("68185.50000"), "68185.50000", new BigDecimal("2.39380832"), "2.39380832", new BigDecimal("1729078519.859168")),
+                new OrderBookItem(new BigDecimal("68185.60000"), "68185.60000", new BigDecimal("3.66646769"), "3.66646769", new BigDecimal("1729078506.263258")),
+                new OrderBookItem(new BigDecimal("68187.50000"), "68187.50000", new BigDecimal("0.37120000"), "0.37120000", new BigDecimal("1729078493.811483"))
+        );
+
+        //local cs 4216331490
+
+        LocalOrderBook localOrderBook = new LocalOrderBook();
+        localOrderBook.update(bids, asks, null);
+
+        localOrderBook.update(List.of(
+                        new OrderBookItem(new BigDecimal("68143.30000"), "68143.30000", new BigDecimal("0")         , "0.00000000", new BigDecimal("1729078521.841720"), false),
+                        new OrderBookItem(new BigDecimal("68118.00000"), "68118.00000", new BigDecimal("0.03390000"), "0.03390000", new BigDecimal("1729078519.658733"), true)
+                ),
+                List.of(),
+                4043596651L);
 
     }
 

@@ -47,7 +47,8 @@ public class OrderBookUpdate {
                     String priceStr = i.get(0);
                     String volumeStr = i.get(1);
                     String timestamp = i.get(2);
-                    String republished = i.get(3);
+                    String republished = null;
+                    if(i.size() == 4) republished = i.get(3);
                     return new OrderBookItem(
                                                 new BigDecimal(priceStr),
                                                 priceStr,

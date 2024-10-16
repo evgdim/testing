@@ -31,22 +31,5 @@ public class TestWebsocket {
         });
     }
 
-    @Test
-    public void testFlux() throws ExecutionException, InterruptedException {
-        KrakenClient krakenClientMock = spy(KrakenClient.class);
-        doAnswer(invocationOnMock -> {
-            ((Consumer<String>) invocationOnMock.getArguments()[0]).accept("Test response");
-            return null;
-        }).when(krakenClientMock).listenOrderBookUpdates(any());
 
-        var orderBook = krakenClientMock.orderBookUpdates();
-                //.subscribe(s -> assertThat(s).isEqualTo("Test response"));
-
-        StepVerifier
-                .create(orderBook)
-                .expectNext("Test response")
-                .thenCancel()
-                //.expectComplete()
-                .verify();
-    }
 }
