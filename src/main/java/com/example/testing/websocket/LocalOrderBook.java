@@ -23,23 +23,36 @@ public class LocalOrderBook {
     }
 
     synchronized public void update(List<OrderBookItem> updatedBids, List<OrderBookItem> updatedAsks, Long apiChecksum) {
-        String asksStringForChecksum = calculateStringForChecksum(updatedAsks, this.asks, false);
-        String bidsStringForChecksum = calculateStringForChecksum(updatedBids, this.bids, true);
+        String asksStringForChecksum = calculateAsksStringForChecksum(updatedAsks);
+        String bidsStringForChecksum = calculateBidsStringForChecksum(updatedBids);
         String fullStringForChecksum = asksStringForChecksum + bidsStringForChecksum;
         long localChecksum = calculateChecksum(fullStringForChecksum);
         System.out.println("local: "+localChecksum + " api: "+apiChecksum);
         if(apiChecksum != null && apiChecksum.longValue() != localChecksum) throw new InvalidChecksumException();
     }
 
-    private String calculateStringForChecksum(List<OrderBookItem> updatedAsks, List<OrderBookItem> asks, boolean reversed) {
+    private String calculateAsksStringForChecksum(List<OrderBookItem> updatedAsks) {
         String asksStringForChecksum;
         if (updatedAsks != null && !updatedAsks.isEmpty()) {
-            upsertOrderBookItems(updatedAsks, asks);
-            Stream<OrderBookItem> sortedAsks = getSortedOrderBookItems(asks, reversed).limit(10);
+            upsertOrderBookItems(updatedAsks, this.asks);
+            Stream<OrderBookItem> sortedAsks = getSortedOrderBookItems(this.asks, false).limit(10);
             asksStringForChecksum = getStringForChecksum(sortedAsks);
-            this.asks = getSortedOrderBookItems(asks, reversed).limit(10).collect(Collectors.toList());
+            this.asks = getSortedOrderBookItems(asks, false).limit(10).collect(Collectors.toList());
         } else {
-            asksStringForChecksum = getStringForChecksum(getSortedOrderBookItems(asks, reversed));
+            asksStringForChecksum = getStringForChecksum(getSortedOrderBookItems(asks, false));
+        }
+        return asksStringForChecksum;
+    }
+
+    private String calculateBidsStringForChecksum(List<OrderBookItem> updatedBids) {
+        String asksStringForChecksum;
+        if (updatedBids != null && !updatedBids.isEmpty()) {
+            upsertOrderBookItems(updatedBids, this.bids);
+            Stream<OrderBookItem> sortedBids = getSortedOrderBookItems(this.bids, true).limit(10);
+            asksStringForChecksum = getStringForChecksum(sortedBids);
+            this.bids = getSortedOrderBookItems(this.bids, true).limit(10).collect(Collectors.toList());
+        } else {
+            asksStringForChecksum = getStringForChecksum(getSortedOrderBookItems(this.bids, true));
         }
         return asksStringForChecksum;
     }
